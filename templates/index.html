@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>YouTube to Sheets</title>
+  </head>
+  <body>
+    <h1>Enter YouTube URL (Video or Playlist)</h1>
+    <form method="POST" action="/process">
+      YouTube URL: <input type="text" name="url" required /> <br /><br />
+      <input type="submit" value="Submit" />
+    </form>
+
+    {% if url_contains_both %}
+    <form method="POST" action="/confirm">
+      <p>
+        The URL contains both a video and a playlist. What would you like to do?
+      </p>
+      <input type="hidden" name="url" value="{{ url }}" />
+      <input type="radio" id="single" name="option" value="single" checked />
+      <label for="single">Add Just This Video</label><br />
+      <input type="radio" id="playlist" name="option" value="playlist" />
+      <label for="playlist">Add Entire Playlist</label><br />
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+    {% endif %} {% if success_message %}
+    <p>{{ success_message }}</p>
+    <a href="/">Submit another video</a>
+    {% endif %}
+  </body>
+</html>
