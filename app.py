@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from googleapiclient.discovery import build
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+# from oauth2client.service_account import ServiceAccountCredentials
 import isodate
 from dotenv import load_dotenv
 import os
@@ -71,19 +71,20 @@ def get_playlist_videos(playlist_id):
 
 # Function to update Google Sheets
 def update_google_sheet(data):
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
-    client = gspread.authorize(creds)
+    gc = gspread.service_account(filename='CREDENTIALS_FILE')
+    # scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    # creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
+    # client = gspread.authorize(creds)
     
     # Print available spreadsheets for debugging
-    sheet_list = client.openall()
+    sheet_list = gc.openall()
     print("Available Spreadsheets:")
     for sheet in sheet_list:
         print(sheet.title)
     
     # Open the specified spreadsheet and sheet
     try:
-        sheet = client.open(SPREADSHEET_NAME).worksheet(SHEET_NAME)
+        sheet = gc.open(SPREADSHEET_NAME).worksheet(SHEET_NAME)
     except gspread.SpreadsheetNotFound:
         print(f"Spreadsheet '{SPREADSHEET_NAME}' not found.")
         raise
