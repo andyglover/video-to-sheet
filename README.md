@@ -31,9 +31,9 @@ The project requires the following Python libraries:
 
 1. **Set up your own Google service account and YouTube Data API keys, and manage them securely and responsibly.**
 
-To enable the gspread library to modify a Google Sheet, enable Google Sheets and Google Drive API access using a Service Account as shown in the gspread docs:
+### Google Sheets and Google Drive API
 
-https://docs.gspread.org/en/latest/oauth2.html
+To enable the gspread library to modify a Google Sheet, enable Google Sheets and Google Drive API access using a Service Account as shown in the gspread docs: https://docs.gspread.org/en/latest/oauth2.html
 
 Remember to share only the spreadsheet you want to modify with your service account:
 
@@ -43,9 +43,9 @@ Remember to share only the spreadsheet you want to modify with your service acco
 
 - Enter the service account email (found in the client_email field of your service-account-credentials.json file) and share the document with it, giving it at least "Editor" access.
 
-To enable retrieval of video and playlist information, enable Youtube Data API access via an API key, as shown in the Google Developer docs:
+### Youtube API
 
-https://developers.google.com/youtube/v3/getting-started
+To enable retrieval of video and playlist information, enable Youtube Data API access via an API key, as shown in the Google Developer docs: https://developers.google.com/youtube/v3/getting-started
 
 Remember to add restrictions to your API key to further secure it:
 
