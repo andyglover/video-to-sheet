@@ -1,4 +1,4 @@
-# YouTube to Google Sheets
+# video-to-sheet
 
 This Flask application allows you to input YouTube video or playlist URLs and automatically fetches details such as title, channel name, duration, and URL. The fetched details are then added to a specified Google Sheets document.
 
