@@ -71,10 +71,7 @@ def get_playlist_videos(playlist_id):
 
 # Function to update Google Sheets
 def update_google_sheet(data):
-    gc = gspread.service_account(filename='CREDENTIALS_FILE')
-    # scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    # creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
-    # client = gspread.authorize(creds)
+    gc = gspread.service_account(filename=CREDENTIALS_FILE)
     
     # Print available spreadsheets for debugging
     sheet_list = gc.openall()
