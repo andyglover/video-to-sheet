@@ -26,13 +26,15 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     url = request.form['url']
-    video_id = get_video_id(url)
-    playlist_id = get_playlist_id(url)
 
-    if not is_valid_youtube_url(url):
+    # Combined validation check: Ensure the URL is not empty, does not exceed a reasonable length, and matches YouTube URL pattern
+    if not url or len(url) > 2048 or not is_valid_youtube_url(url):
         error_message = "Invalid YouTube URL. Please enter a valid URL."
         logger.error(f"Invalid URL submitted: {url}")
         return render_template('index.html', error_message=error_message)
+    
+    video_id = get_video_id(url)
+    playlist_id = get_playlist_id(url)
 
     if video_id and playlist_id:
         return render_template('index.html', url_contains_both=True, url=url)
