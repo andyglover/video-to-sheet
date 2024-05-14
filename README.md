@@ -25,9 +25,13 @@ The project requires the following Python libraries:
   pip install Flask google-api-python-client gspread oauth2client isodate python-dotenv
   ```
 
+  (Other sub-dependencies listed in the requirements.txt should be installed automatically when using pip.)
+
 ## Required setup
 
-1. **Create a `.env` file in the root directory with the following contents:**
+1. **Set up your own Google service account and YouTube Data API keys, and manage them securely.**
+
+2. **Create a `.env` file in the root directory with the following contents:**
 
    ```env
    YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY
@@ -41,14 +45,14 @@ The project requires the following Python libraries:
    - Replace `Your Google Sheet Name` with the name of your Google Sheets document.
    - Replace `Sheet1` with the name of the sheet within the Google Sheets document.
 
-2. **Keep your .env file and credentials JSON file secure and do not share them publicly. If you fork this project, ensure your `.gitignore` file includes the following to avoid committing sensitive information:**
+3. **Keep your .env file and credentials JSON file secure and do not share them publicly. If you fork this project, ensure your `.gitignore` file includes the following to avoid committing sensitive information:**
 
    ```gitignore
    .env
    credentials.json
    ```
 
-3. **Ensure that your Google service account has the necessary permissions to access and edit the specified Google Sheets document.**
+4. **Ensure that your Google service account has the necessary permissions to access and edit the specified Google Sheets document.**
 
    - Open your Google Sheets document.
 
@@ -78,12 +82,12 @@ The project requires the following Python libraries:
 - `templates/index.html`: HTML template for the web form and user interface.
 - `.env`: Environment variables file (should be created manually as per instructions).
 - `.gitignore`: Git ignore file to exclude sensitive files from being committed.
-- `requirements.txt`: List of dependencies.
+- `requirements.txt`: List of dependencies. (generated with "pip freeze > requirements.txt")
 
 ## License
 
 This project is licensed under the MIT License.
 
-## Conclusion
+## Disclaimer
 
-By following this README, you can set up and run your YouTube to Google Sheets application securely and efficiently. This documentation includes all necessary details to help you or any other user understand and use the application effectively.
+This project is provided "as is" without warranty of any kind, express or implied. The user assumes all responsibility for using this project. It is the user's responsibility to ensure that their API keys and credentials are kept secure and not exposed publicly. The authors and maintainers of this project are not responsible for any misuse or damage that may occur from using this project.
