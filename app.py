@@ -5,16 +5,34 @@ import isodate
 from dotenv import load_dotenv
 import os
 
+app = Flask(__name__)
+
 # Load environment variables from .env file
 load_dotenv()
 
-app = Flask(__name__)
+class Config:
+    # Load API key and credentials path from environment variables
+    API_KEY = os.getenv('YOUTUBE_API_KEY')
+    CREDENTIALS_FILE = os.getenv('GOOGLE_CREDENTIALS')
+    SPREADSHEET_NAME = os.getenv('SPREADSHEET_NAME')
+    SHEET_NAME = os.getenv('SHEET_NAME')
 
-# Load API key and credentials path from environment variables
-API_KEY = os.getenv('YOUTUBE_API_KEY')
-CREDENTIALS_FILE = os.getenv('GOOGLE_CREDENTIALS')
-SPREADSHEET_NAME = os.getenv('SPREADSHEET_NAME')
-SHEET_NAME = os.getenv('SHEET_NAME')
+    @staticmethod
+    def validate():
+        missing_vars = [var for var in ['YOUTUBE_API_KEY', 'GOOGLE_CREDENTIALS', 'SPREADSHEET_NAME', 'SHEET_NAME'] if not os.getenv(var)]
+        if missing_vars:
+            raise EnvironmentError(f"Missing required environment variables: {', '.join(missing_vars)}")
+
+
+# Load configurations
+app.config.from_object(Config)
+
+# Validate environment variables
+try:
+    Config.validate()
+except EnvironmentError as e:
+    print(f"Environment validation error: {e}")
+    exit(1)
 
 # Function to get video details from YouTube
 def get_video_details(video_ids):
@@ -55,7 +73,7 @@ def get_video_details(video_ids):
 
 # Function to get all video IDs from a playlist
 def get_playlist_videos(playlist_id):
-    youtube = build('youtube', 'v3', developerKey=API_KEY)
+    youtube = build('youtube', 'v3', developerKey=Config.API_KEY)
     
     video_ids = []
     next_page_token = None
@@ -84,7 +102,7 @@ def get_playlist_videos(playlist_id):
 
 # Function to update Google Sheets
 def update_google_sheet(data):
-    gc = gspread.service_account(filename=CREDENTIALS_FILE)
+    gc = gspread.service_account(filename=Config.CREDENTIALS_FILE)
     
     # Print available spreadsheets for debugging
     sheet_list = gc.openall()
