@@ -31,6 +31,30 @@ The project requires the following Python libraries:
 
 1. **Set up your own Google service account and YouTube Data API keys, and manage them securely and responsibly.**
 
+To enable the gspread library to modify a Google Sheet, enable Google Sheets and Google Drive API access using a Service Account as shown in the gspread docs:
+
+https://docs.gspread.org/en/latest/oauth2.html
+
+Remember to share only the spreadsheet you want to modify with your service account:
+
+- Open your Google Sheets document.
+
+- Click the "Share" button in the top-right corner.
+
+- Enter the service account email (found in the client_email field of your service-account-credentials.json file) and share the document with it, giving it at least "Editor" access.
+
+To enable retrieval of video and playlist information, enable Youtube Data API access via an API key, as shown in the Google Developer docs:
+
+https://developers.google.com/youtube/v3/getting-started
+
+Remember to add restrictions to your API key to further secure it:
+
+- From the API Dashboard "Credentials" page, choose the API key from the list.
+
+- Under API restrictions, select YouTube Data API v3
+
+More info: https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions
+
 2. **Create a `.env` file in the root directory with the following contents:**
 
    ```env
@@ -45,20 +69,12 @@ The project requires the following Python libraries:
    - Replace `Your Google Sheet Name` with the name of your Google Sheets document.
    - Replace `Sheet1` with the name of the sheet within the Google Sheets document.
 
-3. **Keep your .env file and credentials JSON file secure and do not share them publicly. If you fork this project, ensure your `.gitignore` file includes the following to avoid committing sensitive information:**
+3. **Keep your .env file and credentials JSON file secure and do not share them publicly. If you track this code with git, ensure your `.gitignore` file includes the following to avoid committing sensitive information:**
 
    ```gitignore
    .env
    credentials.json
    ```
-
-4. **Ensure that your Google service account has the necessary permissions to access and edit the specified Google Sheets document.**
-
-   - Open your Google Sheets document.
-
-   - Click the "Share" button in the top-right corner.
-
-   - Enter the service account email (found in the client_email field of your service-account-credentials.json file) and share the document with it, giving it at least "Editor" access.
 
 ## Usage
 
