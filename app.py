@@ -17,36 +17,47 @@ SPREADSHEET_NAME = os.getenv('SPREADSHEET_NAME')
 SHEET_NAME = os.getenv('SHEET_NAME')
 
 # Function to get video details from YouTube
-def get_video_details(video_id):
+def get_video_details(video_ids):
     youtube = build('youtube', 'v3', developerKey=API_KEY)
+    
+    if isinstance(video_ids, str):
+        video_ids = [video_ids]
     
     request = youtube.videos().list(
         part="snippet,contentDetails",
-        id=video_id
+        id=','.join(video_ids)
     )
     response = request.execute()
     
-    video = response['items'][0]
-    title = video['snippet']['title']
-    channel = video['snippet']['channelTitle']
-    duration_iso = video['contentDetails']['duration']
-    duration = isodate.parse_duration(duration_iso)
+    video_details_list = []
+    for video in response['items']:
+        title = video['snippet']['title']
+        channel = video['snippet']['channelTitle']
+        duration_iso = video['contentDetails']['duration']
+        duration = isodate.parse_duration(duration_iso)
+        
+        # Convert duration to a human-readable format
+        minutes, seconds = divmod(duration.total_seconds(), 60)
+        hours, minutes = divmod(minutes, 60)
+        if hours > 0:
+            duration_str = f"{int(hours)}:{int(minutes):02}:{int(seconds):02}"
+        else:
+            duration_str = f"{int(minutes)}:{int(seconds):02}"
+        
+        video_details_list.append({
+            "title": title,
+            "channel": channel,
+            "duration": duration_str,
+            "url": f"https://www.youtube.com/watch?v={video['id']}"
+        })
     
-    # Convert duration to a human-readable format
-    minutes, seconds = divmod(duration.total_seconds(), 60)
-    hours, minutes = divmod(minutes, 60)
-    if hours > 0:
-        duration_str = f"{int(hours)}:{int(minutes):02}:{int(seconds):02}"
-    else:
-        duration_str = f"{int(minutes)}:{int(seconds):02}"
-    
-    return {"title": title, "channel": channel, "duration": duration_str, "url": f"https://www.youtube.com/watch?v={video_id}"}
+    return video_details_list
 
 # Function to get all video IDs from a playlist
 def get_playlist_videos(playlist_id):
     youtube = build('youtube', 'v3', developerKey=API_KEY)
     
-    videos = []
+    video_ids = []
     next_page_token = None
 
     while True:
@@ -60,13 +71,16 @@ def get_playlist_videos(playlist_id):
         
         for item in response['items']:
             video_id = item['contentDetails']['videoId']
-            videos.append(get_video_details(video_id))
+            video_ids.append(video_id)
         
         next_page_token = response.get('nextPageToken')
         if not next_page_token:
             break
     
-    return videos
+    # Fetch video details in bulk using the unified function
+    video_details_list = get_video_details(video_ids)
+    
+    return video_details_list
 
 # Function to update Google Sheets
 def update_google_sheet(data):
@@ -108,7 +122,7 @@ def process():
         return render_template('index.html', success_message=success_message)
     else:
         video_id = url.split("v=")[-1].split('&')[0]
-        video_details_list = [get_video_details(video_id)]
+        video_details_list = get_video_details(video_id)
         update_google_sheet(video_details_list)
         success_message = "Details saved for 1 video."
         return render_template('index.html', success_message=success_message)
@@ -120,7 +134,7 @@ def confirm():
     video_id = url.split("v=")[-1].split('&')[0]
     playlist_id = url.split("list=")[-1].split('&')[0]
     if option == 'single':
-        video_details_list = [get_video_details(video_id)]
+        video_details_list = get_video_details(video_id)
     else:
         video_details_list = get_playlist_videos(playlist_id)
     
