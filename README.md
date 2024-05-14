@@ -55,21 +55,22 @@ Remember to add restrictions to your API key to further secure it:
 
 More info: https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions
 
-2. **Create a `.env` file in the root directory with the following contents:**
+### Environment Variables
+
+This project uses environment variables for configuration. If any environment variables are missing, the application will print an error message and exit.
+
+1. Create a `.env` file in the root directory with the following variables:
 
    ```env
-   YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY
-   GOOGLE_CREDENTIALS=path/to/your/service-account-credentials.json
-   SPREADSHEET_NAME=Your Google Sheet Name
+   YOUTUBE_API_KEY=your_youtube_data_api_key
+   GOOGLE_CREDENTIALS=your_google_service_account_credentials.json
+   SPREADSHEET_NAME=your_google_sheets_document
    SHEET_NAME=Sheet1
    ```
 
-   - Replace `YOUR_YOUTUBE_API_KEY` with your actual YouTube Data API key.
-   - Replace `path/to/your/service-account-credentials.json` with the path to your Google service account credentials JSON file.
-   - Replace `Your Google Sheet Name` with the name of your Google Sheets document.
-   - Replace `Sheet1` with the name of the sheet within the Google Sheets document.
+   - Replace `Sheet1` with the name of the sheet within the Google Sheets document. (Sheet1 is usually the default for new Google Sheets)
 
-3. **Keep your .env file and credentials JSON file secure and do not share them publicly. If you track this code with git, ensure your `.gitignore` file includes the following to avoid committing sensitive information:**
+2. Keep your .env file and credentials JSON file secure and do not share them publicly. If you track this code with git, ensure your `.gitignore` file includes the following to avoid committing sensitive information:
 
    ```gitignore
    .env
@@ -79,6 +80,8 @@ More info: https://cloud.google.com/docs/authentication/api-keys#api_key_restric
 ## Usage
 
 1. **Run the Flask application:**
+
+   After setting up the environment variables and your API access, you can run the Flask application:
 
    ```bash
    python app.py
@@ -95,6 +98,7 @@ More info: https://cloud.google.com/docs/authentication/api-keys#api_key_restric
 ## Project Structure
 
 - `app.py`: Main application file containing the Flask app and logic for fetching video details and updating Google Sheets.
+- `config.py`: Handles the loading and validation of environment variables. It ensures all necessary variables are set before the application runs.
 - `templates/index.html`: HTML template for the web form and user interface.
 - `.env`: Environment variables file (should be created manually as per instructions).
 - `.gitignore`: Git ignore file to exclude sensitive files from being committed.
