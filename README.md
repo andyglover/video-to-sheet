@@ -29,7 +29,7 @@ The project requires the following Python libraries:
 
 ## Required setup
 
-1. **Set up your own Google service account and YouTube Data API keys, and manage them securely.**
+1. **Set up your own Google service account and YouTube Data API keys, and manage them securely and responsibly.**
 
 2. **Create a `.env` file in the root directory with the following contents:**
 
@@ -90,4 +90,4 @@ This project is licensed under the MIT License.
 
 ## Disclaimer
 
-This project is provided "as is" without warranty of any kind, express or implied. The user assumes all responsibility for using this project. It is the user's responsibility to ensure that their API keys and credentials are kept secure and not exposed publicly. The authors and maintainers of this project are not responsible for any misuse or damage that may occur from using this project.
+This project is provided "as is" without warranty of any kind, express or implied. The user assumes all responsibility for using this project. It is the user's responsibility to ensure that their API keys and credentials are used responsibly, kept secure and not exposed publicly. The authors and maintainers of this project are not responsible for any misuse or damage that may occur from using this project.
