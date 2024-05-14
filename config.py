@@ -1,7 +1,11 @@
 import os
 import logging
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Config:
     def __init__(self):
