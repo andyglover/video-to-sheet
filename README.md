@@ -9,6 +9,7 @@ This Flask application allows you to input YouTube video or playlist URLs and au
 - Option to choose between adding just a single video or an entire playlist if both are provided in the URL.
 - Stores YouTube video details (title, channel name, duration, URL) in a specified Google Sheets document.
 - Securely handles sensitive information using environment variables.
+- Logs errors.
 
 ## Dependencies
 
@@ -29,7 +30,7 @@ The project requires the following Python libraries:
 
 ## Required setup
 
-1. **Set up your own Google service account and YouTube Data API keys, and manage them securely and responsibly.**
+**Set up your own Google service account and YouTube Data API keys, and manage them securely and responsibly.**
 
 ### Google Sheets and Google Drive API
 
@@ -100,9 +101,12 @@ This project uses environment variables for configuration. If any environment va
 - `app.py`: Main application file containing the Flask app and logic for fetching video details and updating Google Sheets.
 - `config.py`: Handles the loading and validation of environment variables. It ensures all necessary variables are set before the application runs.
 - `templates/index.html`: HTML template for the web form and user interface.
-- `.env`: Environment variables file (should be created manually as per instructions).
+
 - `.gitignore`: Git ignore file to exclude sensitive files from being committed.
 - `requirements.txt`: List of dependencies. (generated with "pip freeze > requirements.txt")
+
+- `app.log`: File used to log errors such as missing configuration or failure to access data.
+- `.env`: Environment variables file (should be created manually as per instructions).
 
 ## License
 

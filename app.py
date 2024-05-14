@@ -2,16 +2,26 @@ from flask import Flask, request, render_template
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
 from config import Config
+import logging
 import gspread
 import isodate
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Instantiate Config and validate environment variables
-config = Config()
+# Configure logging
+logging.basicConfig(filename='app.log', level=logging.INFO,
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+
+# Instantiate Config and validate environment variables
+try:
+    config = Config()
+except EnvironmentError as e:
+    logger.error(f"Configuration validation failed: {str(e)}")
+    raise
 
 # Function to get video details from YouTube
 def get_video_details(video_ids):
@@ -109,21 +119,24 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     url = request.form['url']
-    if "watch" in url and "list=" in url:
-        return render_template('index.html', url_contains_both=True, url=url)
-    elif "playlist" in url:
-        playlist_id = url.split("list=")[-1].split('&')[0]
-        video_details_list = get_playlist_videos(playlist_id)
-        update_google_sheet(video_details_list)
-        success_message = f"Details saved for {len(video_details_list)} videos."
-        return render_template('index.html', success_message=success_message)
-    else:
-        video_id = url.split("v=")[-1].split('&')[0]
-        video_details_list = get_video_details(video_id)
-        update_google_sheet(video_details_list)
-        success_message = "Details saved for 1 video."
-        return render_template('index.html', success_message=success_message)
-
+    try:
+        if "watch" in url and "list=" in url:
+            return render_template('index.html', url_contains_both=True, url=url)
+        elif "playlist" in url:
+            playlist_id = url.split("list=")[-1].split('&')[0]
+            video_details_list = get_playlist_videos(playlist_id)
+            update_google_sheet(video_details_list)
+            success_message = f"Details saved for {len(video_details_list)} videos."
+            return render_template('index.html', success_message=success_message)
+        else:
+            video_id = url.split("v=")[-1].split('&')[0]
+            video_details_list = get_video_details(video_id)
+            update_google_sheet(video_details_list)
+            success_message = "Details saved for 1 video."
+            return render_template('index.html', success_message=success_message)
+    except Exception as e:
+        logger.error(f"An error occurred while processing the URL: {str(e)}")
+        return render_template('index.html', error_message="An error occurred. Please try again.")
 @app.route('/confirm', methods=['POST'])
 def confirm():
     url = request.form['url']

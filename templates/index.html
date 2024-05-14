@@ -26,6 +26,9 @@
     {% endif %} {% if success_message %}
     <p>{{ success_message }}</p>
     <a href="/">Submit another video</a>
+    {% endif %} {% if error_message %}
+    <p>{{ error_message }}</p>
+    <a href="/">Try again</a>
     {% endif %}
   </body>
 </html>
