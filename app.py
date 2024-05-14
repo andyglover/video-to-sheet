@@ -5,6 +5,7 @@ from config import Config
 import logging
 import gspread
 import isodate
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,6 +23,18 @@ try:
 except EnvironmentError as e:
     logger.error(f"Configuration validation failed: {str(e)}")
     raise
+
+def is_valid_youtube_url(url):
+    """
+    Validates the YouTube URL format.
+    :param url: URL to be validated
+    :return: True if valid, False otherwise
+    """
+    # Regular expression for YouTube video and playlist URLs
+    youtube_regex = re.compile(
+        r'^(https?://)?(www\.)?(youtube\.com|youtu\.?be)/.+$'
+    )
+    return re.match(youtube_regex, url) is not None
 
 # Function to get video details from YouTube
 def get_video_details(video_ids):
@@ -120,6 +133,10 @@ def index():
 def process():
     url = request.form['url']
     try:
+        if not is_valid_youtube_url(url):
+            error_message = "Invalid YouTube URL. Please enter a valid URL."
+            logger.error(f"Invalid URL submitted: {url}")
+            return render_template('index.html', error_message=error_message)
         if "watch" in url and "list=" in url:
             return render_template('index.html', url_contains_both=True, url=url)
         elif "playlist" in url:
@@ -141,6 +158,12 @@ def process():
 def confirm():
     url = request.form['url']
     option = request.form.get('option', 'single')
+
+    if not is_valid_youtube_url(url):
+        error_message = "Invalid YouTube URL. Please enter a valid URL."
+        logger.error(f"Invalid URL submitted: {url}")
+        return render_template('index.html', error_message=error_message)
+    
     video_id = url.split("v=")[-1].split('&')[0]
     playlist_id = url.split("list=")[-1].split('&')[0]
     if option == 'single':
