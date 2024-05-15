@@ -46,7 +46,7 @@ def process():
     
     # Combined validation check: Ensure the URL is not empty, does not exceed a reasonable length, and matches YouTube URL pattern
     if not url or len(url) > 2048 or not is_valid_youtube_url(url):
-        error_message = "Invalid YouTube URL. Please enter a valid URL."
+        error_message = "Invalid YouTube URL. Please enter a valid URL in the correct format."
         logger.error(f"Invalid URL submitted: {url}")
         return render_template('index.html', error_message=error_message)
 
@@ -61,11 +61,12 @@ def process():
     error_message, success_message, details_list = fetch_details(video_id, playlist_id)
     
     if error_message:
-        logger.error(f"Error processing URL: {url}")
+        logger.error(f"Error processing URL: {url} - {error_message}")
         return render_template('index.html', error_message=error_message)
     
     update_google_sheet(details_list)
     return render_template('index.html', success_message=success_message)
+
 
 
 @app.route('/confirm', methods=['POST'])
@@ -74,7 +75,7 @@ def confirm():
     option = request.form.get('option', 'single')
 
     if not is_valid_youtube_url(url):
-        error_message = "Invalid YouTube URL. Please enter a valid URL."
+        error_message = "Invalid YouTube URL. Please enter a valid URL in the correct format."
         logger.error(f"Invalid URL submitted: {url}")
         return render_template('index.html', error_message=error_message)
 
@@ -85,9 +86,15 @@ def confirm():
     else:
         video_details_list = get_playlist_videos(playlist_id)
 
+    if not video_details_list:
+        error_message = "Failed to fetch video/playlist details. Please check the URL and try again."
+        logger.error(f"Error fetching details for URL: {url}")
+        return render_template('index.html', error_message=error_message)
+
     update_google_sheet(video_details_list)
     success_message = f"Details saved for {len(video_details_list)} videos."
     return render_template('index.html', success_message=success_message)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
