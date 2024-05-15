@@ -1,7 +1,5 @@
 from flask import Flask, request, render_template
 from config import Config
-from sheets import update_google_sheet
-from videos import is_valid_youtube_url, get_video_id, get_playlist_id, get_video_details, get_playlist_videos
 import logging
 from routes.main_routes import main_bp
 
