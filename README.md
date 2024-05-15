@@ -13,20 +13,13 @@ This Flask application allows you to input YouTube video or playlist URLs and au
 
 ## Dependencies
 
-The project requires the following Python libraries:
+Install the required Python libraries:
 
-- Flask
-- google-api-python-client
-- gspread
-- oauth2client
-- isodate
-- python-dotenv
+```bash
+pip install Flask google-api-python-client gspread oauth2client isodate python-dotenv
+```
 
-  ```bash
-  pip install Flask google-api-python-client gspread oauth2client isodate python-dotenv
-  ```
-
-  (Other sub-dependencies listed in the requirements.txt should be installed automatically when using pip.)
+Other sub-dependencies listed in the `requirements.txt` should be installed automatically when using pip.
 
 ## Required setup
 
