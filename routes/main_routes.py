@@ -1,10 +1,10 @@
 # routes/main_routes.py
-
 from flask import Blueprint, render_template, request
 from config import Config
 from sheets import update_google_sheet
-from videos import is_valid_youtube_url, get_video_id, get_playlist_id, get_video_details, get_playlist_videos
-from helpers import fetch_details  # Import the helper function
+from videos import get_video_id, get_playlist_id, get_video_details, get_playlist_videos
+from helpers import fetch_details
+from validation import validate_youtube_url  # Import validation functions
 import logging
 
 main_bp = Blueprint('main', __name__)
@@ -21,9 +21,9 @@ def index():
 def process():
     url = request.form['url']
     
-    # Combined validation check: Ensure the URL is not empty, does not exceed a reasonable length, and matches YouTube URL pattern
-    if not url or len(url) > 2048 or not is_valid_youtube_url(url):
-        error_message = "Invalid YouTube URL. Please enter a valid URL in the correct format."
+    # Validate URL
+    error_message = validate_youtube_url(url)
+    if error_message:
         logger.error(f"Invalid URL submitted: {url}")
         return render_template('index.html', error_message=error_message)
 
@@ -34,9 +34,8 @@ def process():
     if video_id and playlist_id:
         return render_template('index.html', url_contains_both=True, url=url)
     
-    # Call fetch_details and unpack the returned tuple into three variables: error_message, success_message, and details_list
+    # Fetch details
     error_message, success_message, details_list = fetch_details(video_id, playlist_id)
-    
     if error_message:
         logger.error(f"Error processing URL: {url} - {error_message}")
         return render_template('index.html', error_message=error_message)
@@ -49,8 +48,9 @@ def confirm():
     url = request.form['url']
     option = request.form.get('option', 'single')
 
-    if not is_valid_youtube_url(url):
-        error_message = "Invalid YouTube URL. Please enter a valid URL in the correct format."
+    # Validate URL
+    error_message = validate_youtube_url(url)
+    if error_message:
         logger.error(f"Invalid URL submitted: {url}")
         return render_template('index.html', error_message=error_message)
 

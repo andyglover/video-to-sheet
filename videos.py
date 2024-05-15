@@ -1,17 +1,12 @@
-import re
+# videos.py
 from googleapiclient.discovery import build
 import isodate
 from config import Config
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 config = Config()
-
-def is_valid_youtube_url(url):
-    youtube_regex = re.compile(
-        r'^(https?://)?(www\.)?(youtube\.com|youtu\.?be)/.+$'
-    )
-    return re.match(youtube_regex, url) is not None
 
 def get_video_id(url):
     video_id = re.search(r'(?<=v=)[^&#]+', url)
