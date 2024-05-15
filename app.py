@@ -5,7 +5,6 @@ from videos import is_valid_youtube_url, get_video_id, get_playlist_id, get_vide
 import logging
 from routes.main_routes import main_bp
 
-
 # Configure logging
 logging.basicConfig(filename='app.log', level=logging.INFO,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
@@ -20,12 +19,8 @@ except EnvironmentError as e:
     logger.error(f"Configuration validation failed: {str(e)}")
     raise
 
-
-
-
 # Register Blueprints
 app.register_blueprint(main_bp)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
